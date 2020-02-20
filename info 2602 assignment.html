@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang = "en-US">
+
+<head>
+
+<meta name = "viewport" content = "width=device-width, initial-scale=1.0/>
+<meta charset = "UTF-8"/>
+
+<title> Poke Dextr </title>
+
+<style>
+
+ul#listing {
+	    list-style-type: none;
+	    max-height:600px;
+        overflow:scroll;
+	    width:200px;
+	    padding: 0;
+            margin: 0;
+	    white-space: nowrap; 
+	    background-color: #404040;
+	    font-size: medium;
+		       }
+			
+            li a ,ul li{
+	    display: block;
+	    color: #ffffff;
+	    text-align: left;
+	    padding: 16px;
+	    font-size: medium;
+		       }
+
+	    li a:hover {
+	    background-color: #111111;
+		       }
+
+	    #result{
+	    overflow:auto; 
+		       }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body onload = "getPokemom('dugtrio')">
+
+<nav>
+<div class = "nav-wrapper">
+<a href = "#" class = "brand-logo"> Poke Dextr </a>
+
+<ul id = "nav-mobile" class="right hide-on-med-and-down">
+<li class = "right"> <a href = "index.html"> Listings </a> <li>
+</ul>
+</div>
+</nav>
+
+<main class = "card-panel cyan accent-2"  style = "margin:auto;">
+<div class = "row">
+<div class="col s7 push-s3">
+<ul id = "result" class = "#616161">
+</ul>
+</div>
+
+<div class = "col s5 pull-s7">
+<ul id = "listing class = "#616161">
+</ul>
+</div>
+</div>
+</main>
+
+<script>
+
+async function getPokemon(pokemonName){
+
+//ajax requests query the data and pass to displayPokemon()
+try{
+let request = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`) 
+let result = await request.json()
+displayPokemon(result) 
+}catch(err){
+console.log(error) 
+}
+}
+
+async function getLising(url){
+//ajax request to url to obtain data then pass to displayListing()
+try{
+let response = await fetch(url) 
+let result = await response.json()
+result = result.results
+displayListing(result) 
+}catch(err){
+console.log(error)
+}
+}
+
+function displayListing(pokeList){
+//Provides a list of pokemon links to the page 
+navbar = document.querySelector("#listing") 
+
+for (pokemon of pokeList){
+navbar.innerHTML += 
+`<li> 
+<a id="${pokemon.name}" class="collection-item" href="#" onclick="getPokemon('${pokemon.name}')">${pokemon.name}</a>
+</li>`				
+}
+}
+
+getListing("https://pokeapi.co/api/v2/pokemon/?limit=50&offset=50")
+
+function displayPokemon(pokemon){
+//Provides details of the specific pokemonm on the page
+let window = document.querySelector("#result")
+window.innerHTML = 
+`<li class = "pokedata"><img src = "${pokemon.sprites.front_default}"/></li>
+	<li class = "pokedata">Name: ${pokemon.name}</li>
+	<li class = "pokedata">ID: ${pokemon.id}</li>
+	<li class = "pokedata">Type1: ${pokemon.types[0].type.name}</li>
+	<li class = "pokedata">Weight: ${pokemon.weight}</li>
+	<li class = "pokedata">Height: ${pokemon.height}</li>
+	`
+}
+</script>
+</body>	  
+</html>
